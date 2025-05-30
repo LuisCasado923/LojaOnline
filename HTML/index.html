@@ -108,22 +108,6 @@
       color: #eee;
     }
 
-    .hero-text button {
-      margin-top: 1rem;
-      padding: 10px 16px;
-      background-color: white;
-      color: #1d3557;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .hero-text button:hover {
-      background-color: #e0e0e0;
-    }
-
     .features {
       background: #fff;
       color: #333;
@@ -231,14 +215,11 @@
     <div class="hero-text">
       <h1>Mais de 1500 camisolas disponíveis!</h1>
       <p>Na 11camisolas encontras camisolas, calções e sapatilhas. Produtos da NBA, NFL e dos maiores clubes de futebol. Estilo brutal, vibe autêntica — tudo o que precisas para jogares ou vibrares como um verdadeiro fã.</p>
-      <button id="musicBtn" onclick="ativarMusica()">Ativar Música 🎵</button>
     </div>
   </main>
 
-  <audio id="bgMusic" loop>
-    <source src="HTML\Audio\Marshall Jefferson x Solardo - Move Your Body [Ultra Records].mp3" type="audio/mpeg">
-    O seu navegador não suporta áudio.
-  </audio>
+
+
 
   <section class="features">
     <h2>Por que comprar na 11camisolas?</h2>
@@ -253,20 +234,5 @@
   <footer>
     &copy; 2025 11camisolas. Todos os direitos reservados.
   </footer>
-
-  <script>
-    function ativarMusica() {
-      const audio = document.getElementById('bgMusic');
-      const btn = document.getElementById('musicBtn');
-
-      audio.play().then(() => {
-        btn.innerText = '🎶 Música Ativa';
-        btn.disabled = true;
-      }).catch(err => {
-        alert('⚠️ O navegador bloqueou a reprodução automática. Tenta clicar novamente.');
-        console.error(err);
-      });
-    }
-  </script>
 </body>
 </html>
