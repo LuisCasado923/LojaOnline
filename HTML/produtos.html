@@ -10,9 +10,14 @@
       --blue-dark: #1d3557;
       --side-hover: #e5f2fc;
     }
+    html, body {
+      background: #f0f0f0 !important;
+      color-scheme: only light;
+      color: #333 !important;
+      min-height: 100%;
+    }
     body {
       font-family: 'Poppins', Arial, sans-serif;
-      background: #f0f0f0;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -35,7 +40,6 @@
       margin-right: 5px; transition: 0.3s;
     }
     nav a:hover, nav a.active { background: #e0e0e0; }
-
     .container-main {
       display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto;
     }
@@ -61,14 +65,13 @@
       background: var(--side-hover); color: var(--blue-dark); font-weight: 600; border-left: 3px solid var(--blue-dark);
     }
     .sidebar .icon { width: 20px; height: 20px; display: inline-block; opacity: 0.85; }
-
     .products-section { flex: 1; padding: 40px 42px 0 42px; display: flex; flex-direction: column; width: 100%; }
     .products-grid {
       width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 24px;
-      margin-top: 16px; margin-bottom: 60px;
+      margin-top: 16px; margin-bottom: 30px;
     }
     .product-card {
-      background: #fff; border-radius: 15px; box-shadow: 0 2px 16px rgba(61,61,110,0.07);
+      background: #fff !important; border-radius: 15px; box-shadow: 0 2px 16px rgba(61,61,110,0.07);
       padding: 22px 18px 15px 18px; display: flex; flex-direction: column; align-items: center;
       transition: transform 0.13s; min-width: 0; cursor: pointer;
     }
@@ -81,9 +84,23 @@
     .product-title { font-size: 1.05rem; font-weight: 600; color: var(--blue-dark); text-align: center; margin-bottom: 5px; margin-top: 4px;}
     .product-desc { font-size: 0.93rem; color: #6b6b6b; margin-bottom: 10px; text-align: center; min-height: 36px;}
     .product-price { font-weight: 700; color: #e54880; background: #fce5ef; padding: 4px 13px; border-radius: 8px; margin-bottom: 8px; font-size: 1.01rem; }
+    .pagination {
+      display: flex; gap: 5px; justify-content: center; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .pagination-btn, .pagination-page {
+      background: #fff; border: 1px solid #ddd; color: #1d3557; font-weight: 600; padding: 7px 16px; border-radius: 7px;
+      margin: 0 1px; cursor: pointer; transition: background 0.18s, color 0.18s;
+    }
+    .pagination-btn:hover, .pagination-page:hover { background: #e0e0e0; }
+    .pagination-page.active {
+      background: #43b984; color: #fff; border: 1.5px solid #43b984;
+      cursor: default;
+    }
+    .pagination-info { font-size: 1rem; color: #888; margin: 0 7px; }
+    .pagination input[type="number"] { width: 40px; padding: 4px 4px; margin-left: 4px; border-radius: 5px; border: 1px solid #bbb; }
+    .pagination input[type="submit"] { margin-left: 4px; background: #ddd; border-radius: 5px; border: none; padding: 5px 10px; cursor: pointer;}
     footer { background-color: var(--blue-dark); color: #fff; text-align: center; font-size: 0.96rem; padding: 1rem; border-top: 1.5px solid #eee; width: 100%; flex-shrink: 0; }
-
-    /* GALERIA MODAL */
+    /* Modal */
     .modal-bg {
       display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,26,41,0.7);
       z-index: 2000; align-items: center; justify-content: center;
@@ -108,15 +125,13 @@
     .modal-slider-img {
       width: 100%; height: 100%; object-fit: contain; background: #f3f3f3; user-select:none;
       transition: transform 0.33s cubic-bezier(.8,1.3,.6,1.1);
-      border-radius: 9px;
-      display: block;
+      border-radius: 9px; display: block;
     }
     .modal-arrow {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; background: rgba(25,25,33,0.22);
       color: #1d3557; border: none; border-radius: 50%; font-size: 2.3rem; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 2; transition: background 0.15s;
-      opacity: 0.82;
+      cursor: pointer; z-index: 2; transition: background 0.15s; opacity: 0.82;
     }
     .modal-arrow:hover { background: #e5f2fc; }
     .modal-arrow.left { left: 0; }
@@ -136,9 +151,13 @@
       .sidebar li { border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0; padding: 8px 16px; margin: 0 3px; }
       .sidebar li.selected, .sidebar li:hover { border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;}
       .products-section { padding: 18px 8px 0 8px; }
-      .products-grid { grid-template-columns: 1fr; gap: 26px 0;}
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 8px;}
       .modal-galeria { width: 98vw; max-width: 98vw; }
-      .modal-slider-wrapper { width: 94vw; max-width: 95vw; height: 300px; }
+      .modal-slider-wrapper { width: 94vw; max-width: 95vw; height: 280px; }
+    }
+    @media (max-width: 480px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
     }
   </style>
 </head>
@@ -168,6 +187,7 @@
     </aside>
     <section class="products-section">
       <div class="products-grid" id="produtos-grid"></div>
+      <div class="pagination" id="pagination"></div>
     </section>
   </div>
 
@@ -189,7 +209,8 @@
     &copy; 2025 11camisolas. Todos os direitos reservados.
   </footer>
   <script>
-    // Exemplo de produtos com várias fotos
+    // ----------- Produtos DEMO -----------
+    // Podes adicionar até 2000 produtos (para testar paginação)
     const produtosData = {
       camisolas: [
         {
@@ -230,28 +251,32 @@
           fotos: [
             "https://www.camisolasfutebol.com/chelsea_away_2324.jpg"
           ]
-        }
-        // ... (restantes produtos)
+        },
+        // Adiciona mais produtos...
       ],
-      // Outras categorias como no teu exemplo...
-      calcoes: [ /* ... */ ],
-      sapatilhas: [ /* ... */ ],
-      equipamento: [ /* ... */ ],
-      nba: [ /* ... */ ],
-      bolas: [ /* ... */ ]
+      calcoes: [ ],
+      sapatilhas: [ ],
+      equipamento: [ ],
+      nba: [ ],
+      bolas: [ ]
     };
 
-    // Renderização dos produtos
-    function renderProducts(cat) {
+    // ------------ Paginação ------------
+    const MAX_PER_PAGE = 300;
+    let currentCat = "camisolas";
+    let currentPage = 1;
+
+    function renderProducts(cat, page = 1) {
+      currentCat = cat; currentPage = page;
       const grid = document.getElementById('produtos-grid');
       grid.innerHTML = "";
-      if (!produtosData[cat]) {
-        grid.innerHTML = "<p style='color:#888'>Nenhum produto nesta categoria.</p>";
-        return;
-      }
-      produtosData[cat].forEach((prod, i) => {
+      const produtos = produtosData[cat] || [];
+      const totalPages = Math.ceil(produtos.length / MAX_PER_PAGE) || 1;
+      const start = (page - 1) * MAX_PER_PAGE;
+      const end = start + MAX_PER_PAGE;
+      produtos.slice(start, end).forEach((prod, i) => {
         grid.innerHTML += `
-          <div class="product-card" data-idx="${i}">
+          <div class="product-card" data-idx="${start + i}">
             <img class="product-img" src="${prod.img}" alt="${prod.nome}">
             <div class="product-title">${prod.nome}</div>
             <div class="product-desc">${prod.desc}</div>
@@ -259,10 +284,38 @@
           </div>
         `;
       });
-      // Evento de abrir modal
+      renderPagination(cat, page, totalPages);
+      // Modal evento
       document.querySelectorAll('.product-card').forEach(card => {
-        card.onclick = () => showModal(cat, card.getAttribute('data-idx'));
+        card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
       });
+    }
+
+    // Paginação
+    function renderPagination(cat, page, totalPages) {
+      const pag = document.getElementById('pagination');
+      pag.innerHTML = "";
+      if (totalPages <= 1) return;
+      pag.innerHTML += `<button class="pagination-btn" ${page==1?'disabled':''} onclick="goPage(1)">&lt;</button>`;
+      // Mostra até 2 antes/depois e ... para gaps
+      for(let i=1; i<=totalPages; ++i) {
+        if (i==1 || i==totalPages || Math.abs(i-page)<=1) {
+          pag.innerHTML += `<button class="pagination-page${i==page?' active':''}" onclick="goPage(${i})">${i}</button>`;
+        } else if ((i==page-2 && i>2) || (i==page+2 && i<totalPages-1)) {
+          pag.innerHTML += `<span class="pagination-info">...</span>`;
+        }
+      }
+      pag.innerHTML += `<button class="pagination-btn" ${page==totalPages?'disabled':''} onclick="goPage(${page+1})">&gt;</button>`;
+      pag.innerHTML += `<span class="pagination-info">total ${totalPages} páginas</span>`;
+      pag.innerHTML += `<input type="number" min="1" max="${totalPages}" id="page-input" style="width:40px"> <input type="submit" value="Ir" onclick="goPageInput()">`;
+    }
+    window.goPage = function(page) {
+      renderProducts(currentCat, page);
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+    window.goPageInput = function() {
+      const val = parseInt(document.getElementById("page-input").value);
+      if(val && val>=1) goPage(val);
     }
 
     // Sidebar
@@ -270,14 +323,14 @@
       li.onclick = function() {
         document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
         this.classList.add('selected');
-        renderProducts(this.getAttribute('data-cat'));
+        renderProducts(this.getAttribute('data-cat'), 1);
       }
     });
 
     // ---- MODAL GALERIA SLIDER ----
-    let currentFotos = [], currentFoto = 0;
+    let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
 
-    function showModal(cat, idx) {
+    function showModal(cat, idx, card) {
       const prod = produtosData[cat][idx];
       currentFotos = prod.fotos || [prod.img];
       currentFoto = 0;
@@ -285,6 +338,8 @@
       document.getElementById('modal-prod-desc').textContent = prod.desc;
       updateModalSlider();
       document.getElementById('modal-bg').classList.add('active');
+      // Modal scroll Y para garantir sempre centrado (mesmo em muitos produtos)
+      setTimeout(()=>{document.getElementById('modal-galeria').scrollIntoView({behavior:"smooth", block:"center"});}, 150);
     }
     function closeModal() {
       document.getElementById('modal-bg').classList.remove('active');
@@ -297,10 +352,8 @@
     function updateModalSlider() {
       const img = document.getElementById('modal-slider-img');
       img.src = currentFotos[currentFoto];
-      // Setas só aparecem se >1 foto
       document.getElementById('arrow-left').style.display = (currentFotos.length > 1) ? "block" : "none";
       document.getElementById('arrow-right').style.display = (currentFotos.length > 1) ? "block" : "none";
-      // Dots
       let dots = "";
       for (let i = 0; i < currentFotos.length; ++i) {
         dots += `<span class="modal-indicator-dot${i === currentFoto ? " active" : ""}"></span>`;
@@ -318,9 +371,28 @@
       updateModalSlider();
     };
 
+    // Swipe para mobile
+    document.getElementById('modal-slider-wrapper').addEventListener('touchstart', function(e){
+      startX = e.touches[0].clientX; deltaX = 0;
+    });
+    document.getElementById('modal-slider-wrapper').addEventListener('touchmove', function(e){
+      deltaX = e.touches[0].clientX - startX;
+    });
+    document.getElementById('modal-slider-wrapper').addEventListener('touchend', function(){
+      if(Math.abs(deltaX) > 50){
+        if(deltaX < 0){
+          // swipe esquerda
+          currentFoto = (currentFoto + 1) % currentFotos.length;
+        } else {
+          // swipe direita
+          currentFoto = (currentFoto - 1 + currentFotos.length) % currentFotos.length;
+        }
+        updateModalSlider();
+      }
+    });
 
     // Inicial
-    renderProducts('camisolas');
+    renderProducts('camisolas', 1);
   </script>
 </body>
 </html>
