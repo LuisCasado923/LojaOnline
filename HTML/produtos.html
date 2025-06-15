@@ -9,6 +9,8 @@
     :root {
       --blue-dark: #1d3557;
       --side-hover: #e5f2fc;
+      --header-height: 86px;
+      --nav-bg: #fff;
     }
     html, body {
       background: #f0f0f0 !important;
@@ -26,19 +28,45 @@
       background-color: var(--blue-dark);
       padding: 1.3rem 2rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      height: 86px;
+      height: var(--header-height);
     }
     .logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: 600; color: #fff; }
     .logo_img { width: 50px; height: 50px; margin-right: 10px; }
-    nav { display: flex; gap: 0.5rem; }
-    nav a {
-      text-decoration: none; padding: 8px 16px; border-radius: 6px;
-      background-color: #fff; color: var(--blue-dark); font-weight: 600; font-size: 0.95rem;
-      margin-right: 5px; transition: 0.3s;
+
+    /* NAV SEPARADO EM FUNDO BRANCO */
+    nav {
+      width: 100vw;
+      background: var(--nav-bg);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 0.8rem 0.7rem 2.7rem;
+      border-bottom: 1.5px solid #e5e5e5;
+      box-sizing: border-box;
+      margin-bottom: 0;
     }
-    nav a:hover, nav a.active { background: #e0e0e0; }
+    nav a {
+      text-decoration: none;
+      padding: 9px 17px;
+      border-radius: 8px;
+      background-color: #f2f3f7;
+      color: var(--blue-dark);
+      font-weight: 600;
+      font-size: 1.03rem;
+      transition: 0.22s;
+      margin-right: 4px;
+      border: none;
+      box-shadow: 0 0 0 0 rgba(0,0,0,0.01);
+      outline: none;
+      display: inline-block;
+    }
+    nav a.active, nav a:hover {
+      background: #e0e0e0;
+      color: #15436a;
+    }
+
     .container-main {
       display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto;
       min-height: 0;
@@ -48,7 +76,8 @@
       border-right: 1.5px solid #eee; padding: 32px 0;
       display: flex; flex-direction: column; gap: 14px;
       box-shadow: 2px 0 14px rgba(0,0,0,0.04);
-      position: sticky; top: 86px; left: 0; height: calc(100vh - 86px); z-index: 10;
+      position: sticky; top: calc(var(--header-height) + 48px); left: 0;
+      height: calc(100vh - 86px - 48px); z-index: 10;
       flex-shrink: 0;
     }
     .sidebar .sidebar-title {
@@ -102,7 +131,7 @@
     .pagination input[type="number"] { width: 40px; padding: 4px 4px; margin-left: 4px; border-radius: 5px; border: 1px solid #bbb; }
     .pagination input[type="submit"] { margin-left: 4px; background: #ddd; border-radius: 5px; border: none; padding: 5px 10px; cursor: pointer;}
     footer { background-color: var(--blue-dark); color: #fff; text-align: center; font-size: 0.96rem; padding: 1rem; border-top: 1.5px solid #eee; width: 100%; flex-shrink: 0; }
-    /* Modal */
+    /* Modal, mobile sidebar, etc... mantêm igual */
     .modal-bg {
       display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,26,41,0.7);
       z-index: 2000; align-items: center; justify-content: center;
@@ -148,6 +177,8 @@
 
     /* ----------- MOBILE ----------- */
     @media (max-width: 900px) {
+      header { padding: 1rem 1rem; }
+      nav { padding: 0.7rem 0.5rem 0.7rem 1.1rem; }
       .container-main { flex-direction: column; }
       .sidebar {
         width: 100vw; min-width: unset; border-right: none; border-bottom: 2px solid #eee;
@@ -157,20 +188,9 @@
         align-items: flex-start;
       }
       .sidebar .sidebar-title { display: none; }
-      .sidebar ul {
-        display: flex; flex-direction: row; padding: 0 0 0 0; width: 100vw;
-        flex-wrap: nowrap; /* Isto impede que salte para baixo */
-        overflow-x: auto; overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-      }
-      .sidebar li {
-        border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0;
-        padding: 8px 16px; margin: 0 3px;
-        flex: 0 0 auto; /* Nunca ocupa 100% */
-      }
-      .sidebar li.selected, .sidebar li:hover {
-        border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;
-      }
+      .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 4px; width: 100vw; }
+      .sidebar li { border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0; padding: 8px 16px; margin: 0 3px; }
+      .sidebar li.selected, .sidebar li:hover { border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;}
       .products-section { padding: 18px 8px 0 8px; }
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 8px;}
       .modal-galeria { width: 98vw; max-width: 98vw; }
@@ -179,6 +199,7 @@
     @media (max-width: 500px) {
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
+      nav { padding-left: 2.5rem; }
     }
   </style>
 </head>
@@ -188,12 +209,12 @@
       <img class="logo_img" src="IMG/Logo.jpg" alt="Logo">
       11camisolas
     </div>
-    <nav>
-      <a href="index.html" class="btn">Início</a>
-      <a href="produtos.html" class="btn active">Ver Produtos</a>
-      <a href="encomendas.html" class="btn">Info Encomendas</a>
-    </nav>
   </header>
+  <nav>
+    <a href="index.html" class="btn">Início</a>
+    <a href="produtos.html" class="btn active">Ver Produtos</a>
+    <a href="encomendas.html" class="btn">Info Encomendas</a>
+  </nav>
   <div class="container-main">
     <aside class="sidebar">
       <div class="sidebar-title">Categorias</div>
@@ -230,7 +251,7 @@
     &copy; 2025 11camisolas. Todos os direitos reservados.
   </footer>
   <script>
-    // ----------- Produtos DEMO -----------
+    // ----------- Produtos DEMO ----------- 
     const produtosData = {
       camisolas: [
         {
@@ -272,6 +293,7 @@
             "https://www.camisolasfutebol.com/chelsea_away_2324.jpg"
           ]
         }
+        // Podes adicionar mais produtos aqui...
       ],
       calcoes: [ ],
       sapatilhas: [ ],
@@ -304,13 +326,11 @@
         `;
       });
       renderPagination(cat, page, totalPages);
-      // Modal evento
       document.querySelectorAll('.product-card').forEach(card => {
         card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
       });
     }
 
-    // Paginação
     function renderPagination(cat, page, totalPages) {
       const pag = document.getElementById('pagination');
       pag.innerHTML = "";
