@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Produtos - 11camisolas</title>
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-dark: #1d3557;
+      --side-hover: #e5f2fc;
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: var(--blue-dark);
+      padding: 1.3rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 86px;
+    }
+    .logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: 600; color: #fff; }
+    .logo_img { width: 50px; height: 50px; margin-right: 10px; }
+    nav { display: flex; gap: 0.5rem; }
+    nav a {
+      text-decoration: none; padding: 8px 16px; border-radius: 6px;
+      background-color: #fff; color: var(--blue-dark); font-weight: 600; font-size: 0.95rem;
+      margin-right: 5px; transition: 0.3s;
+    }
+    nav a:hover, nav a.active { background: #e0e0e0; }
+
+    .container-main {
+      display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto;
+    }
+    .sidebar {
+      width: 230px; min-width: 190px; background: #fff;
+      border-right: 1.5px solid #eee; padding: 32px 0;
+      display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 2px 0 14px rgba(0,0,0,0.04);
+      position: sticky; top: 86px; left: 0; height: calc(100vh - 86px); z-index: 10;
+    }
+    .sidebar .sidebar-title {
+      font-weight: 600; color: var(--blue-dark); font-size: 1.1rem;
+      padding: 0 28px 8px 28px; margin-bottom: 0.6rem; letter-spacing: 1px;
+    }
+    .sidebar ul { list-style: none; margin: 0; padding: 0 0 0 10px; flex: 1; }
+    .sidebar li {
+      display: flex; align-items: center; padding: 9px 24px; margin-bottom: 2px;
+      font-size: 1rem; color: #333; border-radius: 7px 0 0 7px;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+      border-left: 3px solid transparent; gap: 10px; user-select: none;
+    }
+    .sidebar li.selected, .sidebar li:hover {
+      background: var(--side-hover); color: var(--blue-dark); font-weight: 600; border-left: 3px solid var(--blue-dark);
+    }
+    .sidebar .icon { width: 20px; height: 20px; display: inline-block; opacity: 0.85; }
+
+    .products-section { flex: 1; padding: 40px 42px 0 42px; display: flex; flex-direction: column; width: 100%; }
+    .products-grid {
+      width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 24px;
+      margin-top: 16px; margin-bottom: 60px;
+    }
+    .product-card {
+      background: #fff; border-radius: 15px; box-shadow: 0 2px 16px rgba(61,61,110,0.07);
+      padding: 22px 18px 15px 18px; display: flex; flex-direction: column; align-items: center;
+      transition: transform 0.13s; min-width: 0; cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-3px) scale(1.025); box-shadow: 0 6px 22px rgba(61,61,110,0.13);
+    }
+    .product-img {
+      width: 110px; height: 110px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; background: #f7f7f7;
+    }
+    .product-title { font-size: 1.05rem; font-weight: 600; color: var(--blue-dark); text-align: center; margin-bottom: 5px; margin-top: 4px;}
+    .product-desc { font-size: 0.93rem; color: #6b6b6b; margin-bottom: 10px; text-align: center; min-height: 36px;}
+    .product-price { font-weight: 700; color: #e54880; background: #fce5ef; padding: 4px 13px; border-radius: 8px; margin-bottom: 8px; font-size: 1.01rem; }
+    footer { background-color: var(--blue-dark); color: #fff; text-align: center; font-size: 0.96rem; padding: 1rem; border-top: 1.5px solid #eee; width: 100%; flex-shrink: 0; }
+
+    /* GALERIA MODAL */
+    .modal-bg {
+      display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,26,41,0.7);
+      z-index: 2000; align-items: center; justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-galeria {
+      background: #fff; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+      max-width: 92vw; width: 420px; max-height: 92vh; display: flex; flex-direction: column; align-items: center; position: relative;
+      padding: 24px 12px 20px 12px;
+      animation: modalShow 0.35s cubic-bezier(.55,1.7,.36,1) forwards;
+    }
+    @keyframes modalShow { from {transform:translateX(100vw);} to {transform:translateX(0);} }
+    .close-btn {
+      position: absolute; top: 12px; right: 17px; background: none; border: none; font-size: 2rem; cursor: pointer; color: #333; opacity: 0.85;
+    }
+    .modal-prod-title { font-weight: 700; font-size: 1.11rem; margin-bottom: 7px; text-align: center; color: var(--blue-dark);}
+    .modal-prod-desc { font-size: 0.97rem; color: #666; margin-bottom: 8px; text-align: center; }
+    .modal-slider-wrapper {
+      width: 96vw; max-width: 320px; height: 330px; margin-bottom: 8px; position: relative; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border-radius: 9px;
+    }
+    .modal-slider-img {
+      width: 100%; height: 100%; object-fit: contain; background: #f3f3f3; user-select:none;
+      transition: transform 0.33s cubic-bezier(.8,1.3,.6,1.1);
+      border-radius: 9px;
+      display: block;
+    }
+    .modal-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; background: rgba(25,25,33,0.22);
+      color: #1d3557; border: none; border-radius: 50%; font-size: 2.3rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 2; transition: background 0.15s;
+      opacity: 0.82;
+    }
+    .modal-arrow:hover { background: #e5f2fc; }
+    .modal-arrow.left { left: 0; }
+    .modal-arrow.right { right: 0; }
+    .modal-indicators {
+      display: flex; gap: 5px; justify-content: center; align-items: center; margin: 7px 0 0 0;
+    }
+    .modal-indicator-dot {
+      width: 9px; height: 9px; background: #e6e6e6; border-radius: 50%; display: inline-block; transition: background 0.2s;
+    }
+    .modal-indicator-dot.active { background: #1d3557; }
+    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 800px) {
+      .container-main { flex-direction: column; }
+      .sidebar { width: 100%; min-width: unset; border-right: none; flex-direction: row; gap: 0; box-shadow: none; padding: 16px 0; position: static; height: auto; top: 0;}
+      .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 12px;}
+      .sidebar li { border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0; padding: 8px 16px; margin: 0 3px; }
+      .sidebar li.selected, .sidebar li:hover { border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;}
+      .products-section { padding: 18px 8px 0 8px; }
+      .products-grid { grid-template-columns: 1fr; gap: 26px 0;}
+      .modal-galeria { width: 98vw; max-width: 98vw; }
+      .modal-slider-wrapper { width: 94vw; max-width: 95vw; height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img class="logo_img" src="IMG/Logo.jpg" alt="Logo">
+      11camisolas
+    </div>
+    <nav>
+      <a href="index.html" class="btn">Início</a>
+      <a href="produtos.html" class="btn active">Ver Produtos</a>
+      <a href="encomendas.html" class="btn">Info Encomendas</a>
+    </nav>
+  </header>
+  <div class="container-main">
+    <aside class="sidebar">
+      <div class="sidebar-title">Categorias</div>
+      <ul id="categorias">
+        <li class="selected" data-cat="camisolas"><span class="icon">👕</span> Camisolas</li>
+        <li data-cat="calcoes"><span class="icon">🩳</span> Calções</li>
+        <li data-cat="sapatilhas"><span class="icon">👟</span> Sapatilhas</li>
+        <li data-cat="equipamento"><span class="icon">🥇</span> Equipamento</li>
+        <li data-cat="nba"><span class="icon">🏀</span> Camisolas NBA</li>
+        <li data-cat="bolas"><span class="icon">⚽</span> Bolas</li>
+      </ul>
+    </aside>
+    <section class="products-section">
+      <div class="products-grid" id="produtos-grid"></div>
+    </section>
+  </div>
+
+  <!-- Modal Galeria -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal-galeria" id="modal-galeria">
+      <button class="close-btn" id="modal-close" aria-label="Fechar">&times;</button>
+      <div class="modal-prod-title" id="modal-prod-title"></div>
+      <div class="modal-prod-desc" id="modal-prod-desc"></div>
+      <div class="modal-slider-wrapper" id="modal-slider-wrapper">
+        <button class="modal-arrow left" id="arrow-left">&#8592;</button>
+        <img src="" class="modal-slider-img" id="modal-slider-img" draggable="false">
+        <button class="modal-arrow right" id="arrow-right">&#8594;</button>
+      </div>
+      <div class="modal-indicators" id="modal-indicators"></div>
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 11camisolas. Todos os direitos reservados.
+  </footer>
+  <script>
+    // Exemplo de produtos com várias fotos
+    const produtosData = {
+      camisolas: [
+        {
+          nome: "FC Porto 24/25",
+          desc: "Oficial jogador, azul/branco.",
+          preco: "28€",
+          img: "https://m.media-amazon.com/images/I/71ACbQ8PQhL._AC_UL1500_.jpg",
+          fotos: [
+            "https://m.media-amazon.com/images/I/71ACbQ8PQhL._AC_UL1500_.jpg",
+            "https://img.vestifoot.fr/image/joueur/porto-maillot-2025-2.jpg",
+            "https://www.camisolasfutebol.com/images/porto_2324_away.jpg"
+          ]
+        },
+        {
+          nome: "Sporting 24/25",
+          desc: "Versão oficial, verde/branco.",
+          preco: "28€",
+          img: "https://m.media-amazon.com/images/I/71hHDKxwISL._AC_UL1500_.jpg",
+          fotos: [
+            "https://m.media-amazon.com/images/I/71hHDKxwISL._AC_UL1500_.jpg",
+            "https://store.sporting.pt/media/catalog/product/cache/sporting24_1.jpg"
+          ]
+        },
+        {
+          nome: "Benfica 24/25",
+          desc: "Vermelha, escudo dourado.",
+          preco: "28€",
+          img: "https://assets.adidas.com/images/w_600,f_auto,q_auto/aca2b4f63e2c4479aacd22b2baf8121f_9366/Camisola_Benfica_2024.jpg",
+          fotos: [
+            "https://assets.adidas.com/images/w_600,f_auto,q_auto/aca2b4f63e2c4479aacd22b2baf8121f_9366/Camisola_Benfica_2024.jpg"
+          ]
+        },
+        {
+          nome: "Chelsea Away 23/24",
+          desc: "Azul claro, detalhes dourados.",
+          preco: "35€",
+          img: "https://www.camisolasfutebol.com/chelsea_away_2324.jpg",
+          fotos: [
+            "https://www.camisolasfutebol.com/chelsea_away_2324.jpg"
+          ]
+        }
+        // ... (restantes produtos)
+      ],
+      // Outras categorias como no teu exemplo...
+      calcoes: [ /* ... */ ],
+      sapatilhas: [ /* ... */ ],
+      equipamento: [ /* ... */ ],
+      nba: [ /* ... */ ],
+      bolas: [ /* ... */ ]
+    };
+
+    // Renderização dos produtos
+    function renderProducts(cat) {
+      const grid = document.getElementById('produtos-grid');
+      grid.innerHTML = "";
+      if (!produtosData[cat]) {
+        grid.innerHTML = "<p style='color:#888'>Nenhum produto nesta categoria.</p>";
+        return;
+      }
+      produtosData[cat].forEach((prod, i) => {
+        grid.innerHTML += `
+          <div class="product-card" data-idx="${i}">
+            <img class="product-img" src="${prod.img}" alt="${prod.nome}">
+            <div class="product-title">${prod.nome}</div>
+            <div class="product-desc">${prod.desc}</div>
+            <div class="product-price">${prod.preco}</div>
+          </div>
+        `;
+      });
+      // Evento de abrir modal
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.onclick = () => showModal(cat, card.getAttribute('data-idx'));
+      });
+    }
+
+    // Sidebar
+    document.querySelectorAll("#categorias li").forEach(li => {
+      li.onclick = function() {
+        document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
+        this.classList.add('selected');
+        renderProducts(this.getAttribute('data-cat'));
+      }
+    });
+
+    // ---- MODAL GALERIA SLIDER ----
+    let currentFotos = [], currentFoto = 0;
+
+    function showModal(cat, idx) {
+      const prod = produtosData[cat][idx];
+      currentFotos = prod.fotos || [prod.img];
+      currentFoto = 0;
+      document.getElementById('modal-prod-title').textContent = prod.nome;
+      document.getElementById('modal-prod-desc').textContent = prod.desc;
+      updateModalSlider();
+      document.getElementById('modal-bg').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('modal-bg').classList.remove('active');
+    }
+    document.getElementById('modal-close').onclick = closeModal;
+    document.getElementById('modal-bg').onclick = function(e) {
+      if (e.target === this) closeModal();
+    };
+
+    function updateModalSlider() {
+      const img = document.getElementById('modal-slider-img');
+      img.src = currentFotos[currentFoto];
+      // Setas só aparecem se >1 foto
+      document.getElementById('arrow-left').style.display = (currentFotos.length > 1) ? "block" : "none";
+      document.getElementById('arrow-right').style.display = (currentFotos.length > 1) ? "block" : "none";
+      // Dots
+      let dots = "";
+      for (let i = 0; i < currentFotos.length; ++i) {
+        dots += `<span class="modal-indicator-dot${i === currentFoto ? " active" : ""}"></span>`;
+      }
+      document.getElementById('modal-indicators').innerHTML = dots;
+    }
+    document.getElementById('arrow-left').onclick = function(e) {
+      e.stopPropagation();
+      currentFoto = (currentFoto - 1 + currentFotos.length) % currentFotos.length;
+      updateModalSlider();
+    };
+    document.getElementById('arrow-right').onclick = function(e) {
+      e.stopPropagation();
+      currentFoto = (currentFoto + 1) % currentFotos.length;
+      updateModalSlider();
+    };
+
+    // --- Mobile touch support (swipe) ---
+    let startX = 0;
+    document.getElementById('modal-slider-wrapper').addEventListener('touchstart', function(e){
+      if (e.touches.length === 1) startX = e.touches[0].clientX;
+    });
+    document.getElementById('modal-slider-wrapper').addEventListener('touchend', function(e){
+      if (!startX) return;
+      let endX = e.changedTouches[0].clientX;
+      let diff = endX - startX;
+      if (Math.abs(diff) > 40) {
+        if (diff < 0) document.getElementById('arrow-right').click();
+        else document.getElementById('arrow-left').click();
+      }
+      startX = 0;
+    });
+
+    // Inicial
+    renderProducts('camisolas');
+  </script>
+</body>
+</html>
