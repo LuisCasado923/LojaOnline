@@ -318,21 +318,6 @@
       updateModalSlider();
     };
 
-    // --- Mobile touch support (swipe) ---
-    let startX = 0;
-    document.getElementById('modal-slider-wrapper').addEventListener('touchstart', function(e){
-      if (e.touches.length === 1) startX = e.touches[0].clientX;
-    });
-    document.getElementById('modal-slider-wrapper').addEventListener('touchend', function(e){
-      if (!startX) return;
-      let endX = e.changedTouches[0].clientX;
-      let diff = endX - startX;
-      if (Math.abs(diff) > 40) {
-        if (diff < 0) document.getElementById('arrow-right').click();
-        else document.getElementById('arrow-left').click();
-      }
-      startX = 0;
-    });
 
     // Inicial
     renderProducts('camisolas');
