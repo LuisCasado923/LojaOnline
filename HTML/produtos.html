@@ -157,9 +157,20 @@
         align-items: flex-start;
       }
       .sidebar .sidebar-title { display: none; }
-      .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 4px; width: 100vw; }
-      .sidebar li { border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0; padding: 8px 16px; margin: 0 3px; }
-      .sidebar li.selected, .sidebar li:hover { border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;}
+      .sidebar ul {
+        display: flex; flex-direction: row; padding: 0 0 0 0; width: 100vw;
+        flex-wrap: nowrap; /* Isto impede que salte para baixo */
+        overflow-x: auto; overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      .sidebar li {
+        border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0;
+        padding: 8px 16px; margin: 0 3px;
+        flex: 0 0 auto; /* Nunca ocupa 100% */
+      }
+      .sidebar li.selected, .sidebar li:hover {
+        border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;
+      }
       .products-section { padding: 18px 8px 0 8px; }
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 8px;}
       .modal-galeria { width: 98vw; max-width: 98vw; }
@@ -260,8 +271,7 @@
           fotos: [
             "https://www.camisolasfutebol.com/chelsea_away_2324.jpg"
           ]
-        },
-        // Adiciona mais produtos...
+        }
       ],
       calcoes: [ ],
       sapatilhas: [ ],
