@@ -305,28 +305,29 @@
     let currentPage = 1;
 
     function renderProducts(cat, page = 1) {
-      currentCat = cat; currentPage = page;
-      const grid = document.getElementById('produtos-grid');
-      grid.innerHTML = "";
-      const produtos = produtosData[cat] || [];
-      const totalPages = Math.ceil(produtos.length / MAX_PER_PAGE) || 1;
-      const start = (page - 1) * MAX_PER_PAGE;
-      const end = start + MAX_PER_PAGE;
-      produtos.slice(start, end).forEach((prod, i) => {
-        grid.innerHTML += `
-          <div class="product-card" data-idx="${start + i}">
-            <img class="product-img" src="${prod.img}" alt="${prod.nome}">
-            <div class="product-title">${prod.nome}</div>
-            <div class="product-desc">${prod.desc}</div>
-            <div class="product-price">${prod.preco}</div>
-          </div>
-        `;
-      });
-      renderPagination(cat, page, totalPages);
-      document.querySelectorAll('.product-card').forEach(card => {
-        card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
-      });
-    }
+  currentCat = cat; currentPage = page;
+  const grid = document.getElementById('produtos-grid');
+  grid.innerHTML = "";
+  const produtos = produtosData[cat] || [];
+  const totalPages = Math.ceil(produtos.length / MAX_PER_PAGE) || 1;
+  const start = (page - 1) * MAX_PER_PAGE;
+  const end = start + MAX_PER_PAGE;
+  produtos.slice(start, end).forEach((prod, i) => {
+    grid.innerHTML += `
+      <div class="product-card" data-idx="${start + i}">
+        <img class="product-img" src="${prod.img}" alt="${prod.nome}">
+        <div class="product-title">${prod.nome || ""}</div>
+        ${prod.desc ? `<div class="product-desc">${prod.desc}</div>` : ""}
+        ${prod.preco ? `<div class="product-price">${prod.preco}</div>` : ""}
+      </div>
+    `;
+  });
+  renderPagination(cat, page, totalPages);
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
+  });
+}
+
 
     function renderPagination(cat, page, totalPages) {
       const pag = document.getElementById('pagination');
