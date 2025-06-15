@@ -12,9 +12,8 @@
     }
     html, body {
       background: #f0f0f0 !important;
-      color-scheme: only light;
-      color: #333 !important;
       min-height: 100%;
+      color: #333 !important;
     }
     body {
       font-family: 'Poppins', Arial, sans-serif;
@@ -42,13 +41,15 @@
     nav a:hover, nav a.active { background: #e0e0e0; }
     .container-main {
       display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto;
+      min-height: 0;
     }
     .sidebar {
-      width: 230px; min-width: 190px; background: #fff;
+      width: 230px; min-width: 170px; background: #fff;
       border-right: 1.5px solid #eee; padding: 32px 0;
       display: flex; flex-direction: column; gap: 14px;
       box-shadow: 2px 0 14px rgba(0,0,0,0.04);
       position: sticky; top: 86px; left: 0; height: calc(100vh - 86px); z-index: 10;
+      flex-shrink: 0;
     }
     .sidebar .sidebar-title {
       font-weight: 600; color: var(--blue-dark); font-size: 1.1rem;
@@ -60,6 +61,7 @@
       font-size: 1rem; color: #333; border-radius: 7px 0 0 7px;
       cursor: pointer; transition: background 0.15s, color 0.15s;
       border-left: 3px solid transparent; gap: 10px; user-select: none;
+      white-space: nowrap;
     }
     .sidebar li.selected, .sidebar li:hover {
       background: var(--side-hover); color: var(--blue-dark); font-weight: 600; border-left: 3px solid var(--blue-dark);
@@ -143,11 +145,19 @@
       width: 9px; height: 9px; background: #e6e6e6; border-radius: 50%; display: inline-block; transition: background 0.2s;
     }
     .modal-indicator-dot.active { background: #1d3557; }
-    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 800px) {
+
+    /* ----------- MOBILE ----------- */
+    @media (max-width: 900px) {
       .container-main { flex-direction: column; }
-      .sidebar { width: 100%; min-width: unset; border-right: none; flex-direction: row; gap: 0; box-shadow: none; padding: 16px 0; position: static; height: auto; top: 0;}
-      .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 12px;}
+      .sidebar {
+        width: 100vw; min-width: unset; border-right: none; border-bottom: 2px solid #eee;
+        flex-direction: row; gap: 0; box-shadow: none; padding: 12px 0; position: static; height: auto; top: 0;
+        overflow-x: auto; overflow-y: hidden;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+      .sidebar .sidebar-title { display: none; }
+      .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 4px; width: 100vw; }
       .sidebar li { border-left: none; border-bottom: 3px solid transparent; border-radius: 7px 7px 0 0; padding: 8px 16px; margin: 0 3px; }
       .sidebar li.selected, .sidebar li:hover { border-bottom: 3px solid var(--blue-dark); border-left: none; border-radius: 7px 7px 0 0;}
       .products-section { padding: 18px 8px 0 8px; }
@@ -155,7 +165,7 @@
       .modal-galeria { width: 98vw; max-width: 98vw; }
       .modal-slider-wrapper { width: 94vw; max-width: 95vw; height: 280px; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 500px) {
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
     }
@@ -210,7 +220,6 @@
   </footer>
   <script>
     // ----------- Produtos DEMO -----------
-    // Podes adicionar até 2000 produtos (para testar paginação)
     const produtosData = {
       camisolas: [
         {
@@ -297,7 +306,6 @@
       pag.innerHTML = "";
       if (totalPages <= 1) return;
       pag.innerHTML += `<button class="pagination-btn" ${page==1?'disabled':''} onclick="goPage(1)">&lt;</button>`;
-      // Mostra até 2 antes/depois e ... para gaps
       for(let i=1; i<=totalPages; ++i) {
         if (i==1 || i==totalPages || Math.abs(i-page)<=1) {
           pag.innerHTML += `<button class="pagination-page${i==page?' active':''}" onclick="goPage(${i})">${i}</button>`;
@@ -338,7 +346,6 @@
       document.getElementById('modal-prod-desc').textContent = prod.desc;
       updateModalSlider();
       document.getElementById('modal-bg').classList.add('active');
-      // Modal scroll Y para garantir sempre centrado (mesmo em muitos produtos)
       setTimeout(()=>{document.getElementById('modal-galeria').scrollIntoView({behavior:"smooth", block:"center"});}, 150);
     }
     function closeModal() {
@@ -381,10 +388,8 @@
     document.getElementById('modal-slider-wrapper').addEventListener('touchend', function(){
       if(Math.abs(deltaX) > 50){
         if(deltaX < 0){
-          // swipe esquerda
           currentFoto = (currentFoto + 1) % currentFotos.length;
         } else {
-          // swipe direita
           currentFoto = (currentFoto - 1 + currentFotos.length) % currentFotos.length;
         }
         updateModalSlider();
