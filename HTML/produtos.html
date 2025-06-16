@@ -33,8 +33,6 @@
     }
     .logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: 600; color: #fff; }
     .logo_img { width: 50px; height: 50px; margin-right: 10px; }
-
-    /* NAV SEPARADO EM FUNDO BRANCO */
     nav {
       width: 100vw;
       background: var(--nav-bg);
@@ -66,7 +64,6 @@
       background: #e0e0e0;
       color: #15436a;
     }
-
     .container-main {
       display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto;
       min-height: 0;
@@ -90,12 +87,38 @@
       font-size: 1rem; color: #333; border-radius: 7px 0 0 7px;
       cursor: pointer; transition: background 0.15s, color 0.15s;
       border-left: 3px solid transparent; gap: 10px; user-select: none;
-      white-space: nowrap;
+      white-space: nowrap; position: relative;
     }
     .sidebar li.selected, .sidebar li:hover {
       background: var(--side-hover); color: var(--blue-dark); font-weight: 600; border-left: 3px solid var(--blue-dark);
     }
     .sidebar .icon { width: 20px; height: 20px; display: inline-block; opacity: 0.85; }
+    /* DROPDOWN LIGAS */
+    .dropdown-ligas {
+      display: none;
+      position: absolute;
+      left: 0; top: 38px;
+      background: #fff;
+      min-width: 170px;
+      border-radius: 0 0 9px 9px;
+      box-shadow: 0 8px 20px rgba(33,55,99,0.06);
+      border-left: 3px solid var(--blue-dark);
+      border-top: none;
+      z-index: 100;
+      padding: 7px 0 7px 0;
+    }
+    .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
+    .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas {
+      display: block;
+    }
+    .dropdown-ligas button {
+      background: none; border: none; width: 100%; text-align: left; font-size: 1rem;
+      padding: 9px 24px; color: var(--blue-dark); cursor: pointer; transition: background 0.18s;
+      font-family: inherit;
+    }
+    .dropdown-ligas button:hover, .dropdown-ligas button.selected-liga {
+      background: #e5f2fc; color: #1d3557; font-weight: 600;
+    }
     .products-section { flex: 1; padding: 40px 42px 0 42px; display: flex; flex-direction: column; width: 100%; }
     .products-grid {
       width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 24px;
@@ -131,7 +154,6 @@
     .pagination input[type="number"] { width: 40px; padding: 4px 4px; margin-left: 4px; border-radius: 5px; border: 1px solid #bbb; }
     .pagination input[type="submit"] { margin-left: 4px; background: #ddd; border-radius: 5px; border: none; padding: 5px 10px; cursor: pointer;}
     footer { background-color: var(--blue-dark); color: #fff; text-align: center; font-size: 0.96rem; padding: 1rem; border-top: 1.5px solid #eee; width: 100%; flex-shrink: 0; }
-    /* Modal, mobile sidebar, etc... mantêm igual */
     .modal-bg {
       display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,26,41,0.7);
       z-index: 2000; align-items: center; justify-content: center;
@@ -174,8 +196,6 @@
       width: 9px; height: 9px; background: #e6e6e6; border-radius: 50%; display: inline-block; transition: background 0.2s;
     }
     .modal-indicator-dot.active { background: #1d3557; }
-
-    /* ----------- MOBILE ----------- */
     @media (max-width: 900px) {
       header { padding: 1rem 1rem; }
       nav { padding: 0.7rem 0.5rem 0.7rem 1.1rem; }
@@ -219,7 +239,15 @@
     <aside class="sidebar">
       <div class="sidebar-title">Categorias</div>
       <ul id="categorias">
-        <li class="selected" data-cat="camisolas"><span class="icon">👕</span> Camisolas</li>
+        <li class="camisolas-dropdown selected">
+          <span class="icon">👕</span> Camisolas
+          <span style="margin-left: auto; font-size:1.1em;">&#9654;</span>
+          <div class="dropdown-ligas">
+            <button class="selected-liga" data-liga="portuguesa">Liga Portugal Betclic</button><br>
+            <button class="selected-liga" data-liga="inglesa">Premier League</button>
+            <!-- <button data-liga="inglesa">Liga Inglesa</button> -->
+          </div>
+        </li>
         <li data-cat="calcoes"><span class="icon">🩳</span> Calções</li>
         <li data-cat="sapatilhas"><span class="icon">👟</span> Sapatilhas</li>
         <li data-cat="equipamento"><span class="icon">🥇</span> Equipamento</li>
@@ -251,287 +279,174 @@
     &copy; 2025 11camisolas. Todos os direitos reservados.
   </footer>
   <script>
-    // ----------- Produtos DEMO ----------- 
+    // ---- PRODUTOS LIGA PORTUGUESA ----
     const produtosData = {
-      camisolas: [
-        {
-          nome: "Retro Benfica 07/08 away",
-          img: "IMG/Benfica/70843373.jpg",
-          fotos: [
-            "IMG/Benfica/88a69548.jpg",
-            "IMG/Benfica/78938596.jpg",
-            "IMG/Benfica/rosa4.jpg",
-            "IMG/Benfica/rosa5.jpg",
-            "IMG/Benfica/rosa6.jpg",
-            "IMG/Benfica/rosa7.jpg",
-            "IMG/Benfica/rosa8.jpg"
-          ]
-        },
-        {
-          nome: "Porto Home 25/26",
-          img: "IMG/Porto/porto1.jpg",
-          fotos: [
-            "IMG/Porto/porto2.jpg",
-            "IMG/Porto/porto3.jpg",
-            "IMG/Porto/porto4.jpg",
-            "IMG/Porto/porto5.jpg",
-            "IMG/Porto/porto6.jpg",
-            "IMG/Porto/porto7.jpg"
-          ]
-        },
-        {
-          nome: "Porto away 25/26",
-          img: "IMG/Porto/rosa1.jpg",
-          fotos: [
-            "IMG/Porto/rosa2.jpg",
-            "IMG/Porto/rosa3.jpg",
-            "IMG/Porto/rosa4.jpg",
-            "IMG/Porto/rosa5.jpg",
-            "IMG/Porto/rosa6.jpg",
-            "IMG/Porto/rosa7.jpg",
-            "IMG/Porto/rosa8.jpg"
-          ]
-        },
-        {
-          nome: "Retro Sporting 99/00",
-          img: "IMG/Sporting/1.jpg",
-          fotos: [
-            "IMG/Sporting/2.jpg",
-            "IMG/Sporting/3.jpg",
-            "IMG/Sporting/4.jpg",
-            "IMG/Sporting/5.jpg",
-            "IMG/Sporting/6.jpg",
-            "IMG/Sporting/7.jpg",
-            "IMG/Sporting/8.jpg"
-          ]
-        },
-        {
-          nome: "Retro 94/95 Benfica home",
-          img: "IMG/Benfica/retro1.jpg",
-          fotos: [
-            "IMG/Benfica/retro2.jpg",
-            "IMG/Benfica/retro3.jpg",
-            "IMG/Benfica/retro4.jpg",
-            "IMG/Benfica/retro5.jpg",
-            "IMG/Benfica/retro6.jpg",
-            "IMG/Benfica/retro7.jpg"
-          ]
-        },
-        {
-          nome: "Retro Benfica 97/99 away",
-          img: "IMG/Benfica/1.jpg",
-          fotos: [
-            "IMG/Benfica/2.jpg",
-            "IMG/Benfica/3.jpg",
-            "IMG/Benfica/4.jpg",
-            "IMG/Benfica/5.jpg",
-            "IMG/Benfica/6.jpg",
-            "IMG/Benfica/7.jpg"
-          ]
-        },
-        {
-          nome: "Retro Porto 10/11 home",
-          img: "IMG/Porto/1.jpg",
-          fotos: [
-            "IMG/Porto/2.jpg",
-            "IMG/Porto/3.jpg",
-            "IMG/Porto/4.jpg",
-            "IMG/Porto/5.jpg",
-            "IMG/Porto/6.jpg",
-            "IMG/Porto/7.jpg",
-            "IMG/Porto/8.jpg"
-          ]
-        },
-        {
-          nome: "Sporting 24/25 Stromp Jersey ",
-          img: "IMG/Sporting/9.jpg",
-          fotos: [
-            "IMG/Sporting/10.jpg",
-            "IMG/Sporting/11.jpg",
-            "IMG/Sporting/12.jpg",
-            "IMG/Sporting/13.jpg",
-            "IMG/Sporting/14.jpg",
-            "IMG/Sporting/15.jpg",
-            "IMG/Sporting/16.jpg"
-          ]
-        },
-        {
-          nome: "Retro Benfica 02/03 away",
-          img: "IMG/Benfica/1.jpg",
-          fotos: [
-            "IMG/Benfica/2.jpg",
-            "IMG/Benfica/3.jpg",
-            "IMG/Benfica/4.jpg",
-            "IMG/Benfica/5.jpg",
-            "IMG/Benfica/6.jpg",
-            "IMG/Benfica/7.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Sporting Third Away",
-          img: "IMG/Sporting/17.jpeg",
-          fotos: [
-            "IMG/Sporting/18.jpeg",
-            "IMG/Sporting/19.jpeg",
-            "IMG/Sporting/20.jpeg",
-            "IMG/Sporting/21.jpeg",
-            "IMG/Sporting/22.jpeg",
-            "IMG/Sporting/23.jpeg"
-          ]
-        },
-        {
-          nome: "Vitoria de Guimaraes 2024/25 Away ",
-          img: "IMG/Vitoria G/1.jpg",
-          fotos: [
-            "IMG/Vitoria G/2.jpg",
-            "IMG/Vitoria G/3.jpg",
-            "IMG/Vitoria G/4.jpg",
-            "IMG/Vitoria G/5.jpg",
-            "IMG/Vitoria G/6.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Sporting Third away ",
-          img: "IMG/Sporting/24.jpg",
-          fotos: [
-            "IMG/Sporting/25.jpg",
-            "IMG/Sporting/26.jpg",
-            "IMG/Sporting/27.jpg",
-            "IMG/Sporting/28.jpg",
-            "IMG/Sporting/29.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Vitoria Guimaraes Home ",
-          img: "IMG/Vitoria G/7.jpg",
-          fotos: [
-            "IMG/Vitoria G/8.jpg",
-            "IMG/Vitoria G/9.jpg",
-            "IMG/Vitoria G/10.jpg",
-            "IMG/Vitoria G/11.jpg",
-            "IMG/Vitoria G/12.jpg",
-            "IMG/Vitoria G/13.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Porto Third away",
-          img: "IMG/Porto/9.jpg",
-          fotos: [
-            "IMG/Porto/10.jpg",
-            "IMG/Porto/11.jpg",
-            "IMG/Porto/12.jpg",
-            "IMG/Porto/13.jpg",
-            "IMG/Porto/14.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Benfica Away ",
-          img: "IMG/Benfica/8.jpg",
-          fotos: [
-            "IMG/Benfica/9.jpg",
-            "IMG/Benfica/10.jpg",
-            "IMG/Benfica/11.jpg",
-            "IMG/Benfica/12.jpg",
-            "IMG/Benfica/13.jpg",
-            "IMG/Benfica/14.jpg",
-            "IMG/Benfica/15.jpg",
-            "IMG/Benfica/16.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Porto Away",
-          img: "IMG/Porto/15.jpg",
-          fotos: [
-            "IMG/Porto/16.jpg",
-            "IMG/Porto/17.jpg",
-            "IMG/Porto/18.jpg",
-            "IMG/Porto/19.jpg",
-            "IMG/Porto/20.jpg",
-            "IMG/Porto/21.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Porto home",
-          img: "IMG/Porto/22.jpg",
-          fotos: [
-            "IMG/Porto/23.jpg",
-            "IMG/Porto/24.jpg",
-            "IMG/Porto/25.jpg",
-            "IMG/Porto/26.jpg",
-            "IMG/Porto/27.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Benfica Home",
-          img: "IMG/Benfica/15.jpg",
-          fotos: [
-            "IMG/Benfica/16.jpg",
-            "IMG/Benfica/17.jpg",
-            "IMG/Benfica/18.jpg",
-            "IMG/Benfica/19.jpg",
-            "IMG/Benfica/20.jpg",
-            "IMG/Benfica/21.jpg"
-          ]
-        },
-        {
-          nome: "24/25 Sporting Lisbon Special Edition",
-          img: "IMG/Sporting/30.jpg",
-          fotos: [
-            "IMG/Sporting/31.jpg",
-            "IMG/Sporting/32.jpg",
-            "IMG/Sporting/33.jpg",
-            "IMG/Sporting/34.jpg",
-            "IMG/Sporting/35.jpg"
-          ]
-        },
-        {
-          nome: "Retro 97-99 Porto Home",
-          img: "IMG/Porto/28.jpg",
-          fotos: [
-            "IMG/Porto/29.jpg",
-            "IMG/Porto/30.jpg",
-            "IMG/Porto/31.jpg",
-            "IMG/Porto/32.jpg",
-            "IMG/Porto/33.jpg"
-          ]
-        },
-        {
-          nome: "Retro 94-95 Benfica main",
-          img: "IMG/Benfica/22.jpg",
-          fotos: [
-            "IMG/Benfica/23.jpg",
-            "IMG/Benfica/24.jpg",
-            "IMG/Benfica/25.jpg",
-            "IMG/Benfica/26.jpg",
-            "IMG/Benfica/27.jpg"
-          ]
-        },
-        {
-          nome: "Retro Porto 03/04 home ",
-          img: "IMG/Porto/34.jpg",
-          fotos: [
-            "IMG/Porto/35.jpg",
-            "IMG/Porto/36.jpg",
-            "IMG/Porto/37.jpg",
-            "IMG/Porto/38.jpg",
-            "IMG/Porto/39.jpg",
-            "IMG/Porto/40.jpg"
-          ]
-        },
-        {
-          nome: "Retro Sporting Lisbon 01/03 home",
-          img: "IMG/Sporting/36.jpg",
-          fotos: [
-            "IMG/Sporting/37.jpg",
-            "IMG/Sporting/38.jpg",
-            "IMG/Sporting/39.jpg",
-            "IMG/Sporting/40.jpg",
-            "IMG/Sporting/41.jpg",
-            "IMG/Sporting/42.jpg",
-            "IMG/Sporting/43.jpg"
-          ]
-        }
-      ],
+      camisolas: {
+        portuguesa: [
+          {
+            nome: "Retro Benfica 07/08 away",
+            img: "IMG/Benfica/70843373.jpg",
+            fotos: ["IMG/Benfica/88a69548.jpg","IMG/Benfica/78938596.jpg","IMG/Benfica/rosa4.jpg","IMG/Benfica/rosa5.jpg","IMG/Benfica/rosa6.jpg","IMG/Benfica/rosa7.jpg","IMG/Benfica/rosa8.jpg"]
+          },
+          {
+            nome: "Porto Home 25/26",
+            img: "IMG/Porto/porto1.jpg",
+            fotos: ["IMG/Porto/porto2.jpg","IMG/Porto/porto3.jpg","IMG/Porto/porto4.jpg","IMG/Porto/porto5.jpg","IMG/Porto/porto6.jpg","IMG/Porto/porto7.jpg"]
+          },
+          {
+            nome: "Porto away 25/26",
+            img: "IMG/Porto/rosa1.jpg",
+            fotos: ["IMG/Porto/rosa2.jpg","IMG/Porto/rosa3.jpg","IMG/Porto/rosa4.jpg","IMG/Porto/rosa5.jpg","IMG/Porto/rosa6.jpg","IMG/Porto/rosa7.jpg","IMG/Porto/rosa8.jpg"]
+          },
+          {
+            nome: "Retro Sporting 99/00",
+            img: "IMG/Sporting/1.jpg",
+            fotos: ["IMG/Sporting/2.jpg","IMG/Sporting/3.jpg","IMG/Sporting/4.jpg","IMG/Sporting/5.jpg","IMG/Sporting/6.jpg","IMG/Sporting/7.jpg","IMG/Sporting/8.jpg"]
+          },
+          {
+            nome: "Retro 94/95 Benfica home",
+            img: "IMG/Benfica/retro1.jpg",
+            fotos: ["IMG/Benfica/retro2.jpg","IMG/Benfica/retro3.jpg","IMG/Benfica/retro4.jpg","IMG/Benfica/retro5.jpg","IMG/Benfica/retro6.jpg","IMG/Benfica/retro7.jpg"]
+          },
+          {
+            nome: "Retro Benfica 97/99 away",
+            img: "IMG/Benfica/1.jpg",
+            fotos: ["IMG/Benfica/2.jpg","IMG/Benfica/3.jpg","IMG/Benfica/4.jpg","IMG/Benfica/5.jpg","IMG/Benfica/6.jpg","IMG/Benfica/7.jpg"]
+          },
+          {
+            nome: "Retro Porto 10/11 home",
+            img: "IMG/Porto/1.jpg",
+            fotos: ["IMG/Porto/2.jpg","IMG/Porto/3.jpg","IMG/Porto/4.jpg","IMG/Porto/5.jpg","IMG/Porto/6.jpg","IMG/Porto/7.jpg","IMG/Porto/8.jpg"]
+          },
+          {
+            nome: "Sporting 24/25 Stromp Jersey ",
+            img: "IMG/Sporting/9.jpg",
+            fotos: ["IMG/Sporting/10.jpg","IMG/Sporting/11.jpg","IMG/Sporting/12.jpg","IMG/Sporting/13.jpg","IMG/Sporting/14.jpg","IMG/Sporting/15.jpg","IMG/Sporting/16.jpg"]
+          },
+          {
+            nome: "Retro Benfica 02/03 away",
+            img: "IMG/Benfica/1.jpg",
+            fotos: ["IMG/Benfica/2.jpg","IMG/Benfica/3.jpg","IMG/Benfica/4.jpg","IMG/Benfica/5.jpg","IMG/Benfica/6.jpg","IMG/Benfica/7.jpg"]
+          },
+          {
+            nome: "24/25 Sporting Third Away",
+            img: "IMG/Sporting/17.jpeg",
+            fotos: ["IMG/Sporting/18.jpeg","IMG/Sporting/19.jpeg","IMG/Sporting/20.jpeg","IMG/Sporting/21.jpeg","IMG/Sporting/22.jpeg","IMG/Sporting/23.jpeg"]
+          },
+          {
+            nome: "Vitoria de Guimaraes 2024/25 Away ",
+            img: "IMG/Vitoria G/1.jpg",
+            fotos: ["IMG/Vitoria G/2.jpg","IMG/Vitoria G/3.jpg","IMG/Vitoria G/4.jpg","IMG/Vitoria G/5.jpg","IMG/Vitoria G/6.jpg"]
+          },
+          {
+            nome: "24/25 Sporting Third away ",
+            img: "IMG/Sporting/24.jpg",
+            fotos: ["IMG/Sporting/25.jpg","IMG/Sporting/26.jpg","IMG/Sporting/27.jpg","IMG/Sporting/28.jpg","IMG/Sporting/29.jpg"]
+          },
+          {
+            nome: "24/25 Vitoria Guimaraes Home ",
+            img: "IMG/Vitoria G/7.jpg",
+            fotos: ["IMG/Vitoria G/8.jpg","IMG/Vitoria G/9.jpg","IMG/Vitoria G/10.jpg","IMG/Vitoria G/11.jpg","IMG/Vitoria G/12.jpg","IMG/Vitoria G/13.jpg"]
+          },
+          {
+            nome: "24/25 Porto Third away",
+            img: "IMG/Porto/9.jpg",
+            fotos: ["IMG/Porto/10.jpg","IMG/Porto/11.jpg","IMG/Porto/12.jpg","IMG/Porto/13.jpg","IMG/Porto/14.jpg"]
+          },
+          {
+            nome: "24/25 Benfica Away ",
+            img: "IMG/Benfica/8.jpg",
+            fotos: ["IMG/Benfica/9.jpg","IMG/Benfica/10.jpg","IMG/Benfica/11.jpg","IMG/Benfica/12.jpg","IMG/Benfica/13.jpg","IMG/Benfica/14.jpg","IMG/Benfica/15.jpg","IMG/Benfica/16.jpg"]
+          },
+          {
+            nome: "24/25 Porto Away",
+            img: "IMG/Porto/15.jpg",
+            fotos: ["IMG/Porto/16.jpg","IMG/Porto/17.jpg","IMG/Porto/18.jpg","IMG/Porto/19.jpg","IMG/Porto/20.jpg","IMG/Porto/21.jpg"]
+          },
+          {
+            nome: "24/25 Porto home",
+            img: "IMG/Porto/22.jpg",
+            fotos: ["IMG/Porto/23.jpg","IMG/Porto/24.jpg","IMG/Porto/25.jpg","IMG/Porto/26.jpg","IMG/Porto/27.jpg"]
+          },
+          {
+            nome: "24/25 Benfica Home",
+            img: "IMG/Benfica/15.jpg",
+            fotos: ["IMG/Benfica/16.jpg","IMG/Benfica/17.jpg","IMG/Benfica/18.jpg","IMG/Benfica/19.jpg","IMG/Benfica/20.jpg","IMG/Benfica/21.jpg"]
+          },
+          {
+            nome: "24/25 Sporting Lisbon Special Edition",
+            img: "IMG/Sporting/30.jpg",
+            fotos: ["IMG/Sporting/31.jpg","IMG/Sporting/32.jpg","IMG/Sporting/33.jpg","IMG/Sporting/34.jpg","IMG/Sporting/35.jpg"]
+          },
+          {
+            nome: "Retro 97-99 Porto Home",
+            img: "IMG/Porto/28.jpg",
+            fotos: ["IMG/Porto/29.jpg","IMG/Porto/30.jpg","IMG/Porto/31.jpg","IMG/Porto/32.jpg","IMG/Porto/33.jpg"]
+          },
+          {
+            nome: "Retro 94-95 Benfica main",
+            img: "IMG/Benfica/22.jpg",
+            fotos: ["IMG/Benfica/23.jpg","IMG/Benfica/24.jpg","IMG/Benfica/25.jpg","IMG/Benfica/26.jpg","IMG/Benfica/27.jpg"]
+          },
+          {
+            nome: "Retro Porto 03/04 home ",
+            img: "IMG/Porto/34.jpg",
+            fotos: ["IMG/Porto/35.jpg","IMG/Porto/36.jpg","IMG/Porto/37.jpg","IMG/Porto/38.jpg","IMG/Porto/39.jpg","IMG/Porto/40.jpg"]
+          },
+          {
+            nome: "Retro Sporting Lisbon 01/03 home",
+            img: "IMG/Sporting/36.jpg",
+            fotos: ["IMG/Sporting/37.jpg","IMG/Sporting/38.jpg","IMG/Sporting/39.jpg","IMG/Sporting/40.jpg","IMG/Sporting/41.jpg","IMG/Sporting/42.jpg","IMG/Sporting/43.jpg"]
+          },  
+        ],
+        inglesa: [
+          {
+            nome: "25/26 Arsenal Home ",
+            img: "IMG/Arsenal/1.jpg",
+            fotos: ["IMG/Arsenal/2.jpg","IMG/Arsenal/3.jpg","IMG/Arsenal/4.jpg","IMG/Arsenal/5.jpg","IMG/Arsenal/6.jpg","IMG/Arsenal/7.jpg"]
+          },
+          {
+            nome: "25/26 Chelsea training suit",
+            img: "IMG/Chelsea/1.jpg",
+            fotos: ["IMG/Chelsea/2.jpg","IMG/Chelsea/3.jpg","IMG/Chelsea/4.jpg","IMG/Chelsea/5.jpg","IMG/Chelsea/6.jpg","IMG/Chelsea/7.jpg"]
+          },
+          {
+            nome: "25/26 Newcastle United Home",
+            img: "IMG/NCastle/1.jpg",
+            fotos: ["IMG/NCastle/2.jpg","IMG/NCastle/3.jpg","IMG/NCastle/4.jpg","IMG/NCastle/5.jpg","IMG/NCastle/6.jpg","IMG/NCastle/7.jpg"]
+          },
+          {
+            nome: "25/26 Tottenham away",
+            img: "IMG/Tote/1.jpg",
+            fotos: ["IMG/Tote/2.jpg","IMG/Tote/3.jpg","IMG/Tote/4.jpg","IMG/Tote/5.jpg","IMG/Tote/6.jpg","IMG/Tote/7.jpg"]
+          },
+          {
+            nome: "25/26 Man United Away ",
+            img: "IMG/Man United/1.jpg",
+            fotos: ["IMG/Man United/2.jpg", "IMG/Man United/3.jpg", "IMG/Man United/4.jpg", "IMG/Man United/5.jpg", "IMG/Man United/6.jpg", "IMG/Man United/7.jpg"]
+          },
+          {
+            nome: "25/26 Man United Home ",
+            img: "IMG/Man United/8.jpg",
+            fotos: ["IMG/Man United/9.jpg", "IMG/Man United/10.jpg", "IMG/Man United/11.jpg", "IMG/Man United/12.jpg", "IMG/Man United/13.jpg", "IMG/Man United/14.jpg", "IMG/Man United/15.jpg", "IMG/Man United/16.jpg"  ]
+          },
+          {
+            nome: " ",
+            img: "IMG/Liverpool/liv1.png",
+            fotos: ["IMG/Liverpool/liv2.png","IMG/Liverpool/liv3.png","IMG/Liverpool/liv4.png"]
+          },
+          {
+            nome: "",
+            img: "IMG/Liverpool/liv5.png",
+            fotos: ["IMG/Liverpool/liv6.png","IMG/Liverpool/liv7.png","IMG/Liverpool/liv8.png"]
+          },
+          {
+            nome: " ",
+            img: "IMG/Liverpool/liv9.png",
+            fotos: ["IMG/Liverpool/liv10.png","IMG/Liverpool/liv11.png"]
+          },
+        ]
+      },
       calcoes: [ ],
       sapatilhas: [ ],
       equipamento: [ ],
@@ -539,35 +454,42 @@
       bolas: [ ]
     };
 
-    // ------------ Paginação ------------
     const MAX_PER_PAGE = 100;
     let currentCat = "camisolas";
+    let currentLiga = "portuguesa";
     let currentPage = 1;
 
-    function renderProducts(cat, page = 1) {
-  currentCat = cat; currentPage = page;
-  const grid = document.getElementById('produtos-grid');
-  grid.innerHTML = "";
-  const produtos = produtosData[cat] || [];
-  const totalPages = Math.ceil(produtos.length / MAX_PER_PAGE) || 1;
-  const start = (page - 1) * MAX_PER_PAGE;
-  const end = start + MAX_PER_PAGE;
-  produtos.slice(start, end).forEach((prod, i) => {
-    grid.innerHTML += `
-      <div class="product-card" data-idx="${start + i}">
-        <img class="product-img" src="${prod.img}" alt="${prod.nome}">
-        <div class="product-title">${prod.nome || ""}</div>
-        ${prod.desc ? `<div class="product-desc">${prod.desc}</div>` : ""}
-        ${prod.preco ? `<div class="product-price">${prod.preco}</div>` : ""}
-      </div>
-    `;
-  });
-  renderPagination(cat, page, totalPages);
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
-  });
-}
+    function renderProducts(cat, page = 1, liga = "portuguesa") {
+      currentCat = cat;
+      currentPage = page;
+      if(cat === "camisolas") currentLiga = liga;
+      const grid = document.getElementById('produtos-grid');
+      grid.innerHTML = "";
 
+      let produtos = [];
+      if(cat === "camisolas") {
+        produtos = produtosData[cat][currentLiga] || [];
+      } else {
+        produtos = produtosData[cat] || [];
+      }
+      const totalPages = Math.ceil(produtos.length / MAX_PER_PAGE) || 1;
+      const start = (page - 1) * MAX_PER_PAGE;
+      const end = start + MAX_PER_PAGE;
+      produtos.slice(start, end).forEach((prod, i) => {
+        grid.innerHTML += `
+          <div class="product-card" data-idx="${start + i}">
+            <img class="product-img" src="${prod.img}" alt="${prod.nome}">
+            <div class="product-title">${prod.nome || ""}</div>
+            ${prod.desc ? `<div class="product-desc">${prod.desc}</div>` : ""}
+            ${prod.preco ? `<div class="product-price">${prod.preco}</div>` : ""}
+          </div>
+        `;
+      });
+      renderPagination(cat, page, totalPages);
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.onclick = (e) => showModal(cat, card.getAttribute('data-idx'), card);
+      });
+    }
 
     function renderPagination(cat, page, totalPages) {
       const pag = document.getElementById('pagination');
@@ -586,7 +508,7 @@
       pag.innerHTML += `<input type="number" min="1" max="${totalPages}" id="page-input" style="width:40px"> <input type="submit" value="Ir" onclick="goPageInput()">`;
     }
     window.goPage = function(page) {
-      renderProducts(currentCat, page);
+      renderProducts(currentCat, page, currentLiga);
       window.scrollTo({top:0, behavior:"smooth"});
     }
     window.goPageInput = function() {
@@ -594,20 +516,39 @@
       if(val && val>=1) goPage(val);
     }
 
-    // Sidebar
-    document.querySelectorAll("#categorias li").forEach(li => {
+    // Sidebar categorias (exceto camisolas)
+    document.querySelectorAll("#categorias li:not(.camisolas-dropdown)").forEach(li => {
       li.onclick = function() {
         document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
         this.classList.add('selected');
         renderProducts(this.getAttribute('data-cat'), 1);
+        document.querySelectorAll('.dropdown-ligas button').forEach(btn => btn.classList.remove('selected-liga'));
       }
     });
 
-    // ---- MODAL GALERIA SLIDER ----
-    let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
+    // Dropdown das ligas (Liga Portuguesa já ativa)
+    document.querySelectorAll('.dropdown-ligas button').forEach(btn => {
+      btn.onclick = function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.dropdown-ligas button').forEach(x => x.classList.remove('selected-liga'));
+        this.classList.add('selected-liga');
+        // Seleciona visualmente a categoria camisolas
+        document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
+        document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
+        renderProducts("camisolas", 1, this.getAttribute('data-liga'));
+      }
+    });
 
+    // Modal
+    let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
     function showModal(cat, idx, card) {
-      const prod = produtosData[cat][idx];
+      let produtos;
+      if(cat === "camisolas") {
+        produtos = produtosData[cat][currentLiga] || [];
+      } else {
+        produtos = produtosData[cat] || [];
+      }
+      const prod = produtos[idx];
       currentFotos = prod.fotos || [prod.img];
       currentFoto = 0;
       document.getElementById('modal-prod-title').textContent = prod.nome;
@@ -645,8 +586,6 @@
       currentFoto = (currentFoto + 1) % currentFotos.length;
       updateModalSlider();
     };
-
-    // Swipe para mobile
     document.getElementById('modal-slider-wrapper').addEventListener('touchstart', function(e){
       startX = e.touches[0].clientX; deltaX = 0;
     });
@@ -664,8 +603,8 @@
       }
     });
 
-    // Inicial
-    renderProducts('camisolas', 1);
+    // Inicial: Liga Portuguesa
+    renderProducts('camisolas', 1, "portuguesa");
   </script>
 </body>
 </html>
