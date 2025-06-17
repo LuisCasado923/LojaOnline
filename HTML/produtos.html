@@ -196,6 +196,8 @@
       width: 9px; height: 9px; background: #e6e6e6; border-radius: 50%; display: inline-block; transition: background 0.2s;
     }
     .modal-indicator-dot.active { background: #1d3557; }
+
+    /* ----------- MOBILE ----------- */
     @media (max-width: 900px) {
       header { padding: 1rem 1rem; }
       nav { padding: 0.7rem 0.5rem 0.7rem 1.1rem; }
@@ -206,6 +208,7 @@
         overflow-x: auto; overflow-y: hidden;
         justify-content: flex-start;
         align-items: flex-start;
+        z-index: 20;
       }
       .sidebar .sidebar-title { display: none; }
       .sidebar ul { display: flex; flex-direction: row; padding: 0 0 0 4px; width: 100vw; }
@@ -215,11 +218,35 @@
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 8px;}
       .modal-galeria { width: 98vw; max-width: 98vw; }
       .modal-slider-wrapper { width: 94vw; max-width: 95vw; height: 280px; }
+
+      /* DROPDOWN MOBILE */
+      .dropdown-ligas {
+        display: none;
+        position: fixed !important;
+        top: 120px !important;
+        left: 0 !important;
+        width: 100vw !important;
+        min-width: unset !important;
+        max-width: 100vw !important;
+        border-radius: 0 0 14px 14px !important;
+        border-left: none !important;
+        border-top: none !important;
+        box-shadow: 0 12px 36px 0 rgba(33,55,99,0.15);
+        z-index: 2001 !important;
+        background: #fff;
+        padding: 10px 0 12px 0;
+      }
+      .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
+      .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas,
+      .sidebar li.camisolas-dropdown.show-mobile .dropdown-ligas {
+        display: block !important;
+      }
     }
     @media (max-width: 500px) {
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
       nav { padding-left: 2.5rem; }
+      .dropdown-ligas { top: 104px !important; }
     }
   </style>
 </head>
@@ -239,13 +266,12 @@
     <aside class="sidebar">
       <div class="sidebar-title">Categorias</div>
       <ul id="categorias">
-        <li class="camisolas-dropdown selected">
+        <li class="camisolas-dropdown selected" tabindex="0">
           <span class="icon">👕</span> Camisolas
           <span style="margin-left: auto; font-size:1.1em;">&#9654;</span>
           <div class="dropdown-ligas">
             <button class="selected-liga" data-liga="portuguesa">Liga Portugal Betclic</button><br>
             <button class="selected-liga" data-liga="inglesa">Premier League</button>
-            <!-- <button data-liga="inglesa">Liga Inglesa</button> -->
           </div>
         </li>
         <li data-cat="calcoes"><span class="icon">🩳</span> Calções</li>
@@ -397,7 +423,7 @@
             nome: "Retro Sporting Lisbon 01/03 home",
             img: "IMG/Sporting/36.jpg",
             fotos: ["IMG/Sporting/37.jpg","IMG/Sporting/38.jpg","IMG/Sporting/39.jpg","IMG/Sporting/40.jpg","IMG/Sporting/41.jpg","IMG/Sporting/42.jpg","IMG/Sporting/43.jpg"]
-          },  
+          }  
         ],
         inglesa: [
           {
@@ -575,7 +601,11 @@
             img: "IMG/Liver/1.jpg",
             fotos: ["IMG/Liver/2.jpg", "IMG/Liver/3.jpg", "IMG/Liver/4.jpg", "IMG/Liver/5.jpg", "IMG/Liver/6.jpg", "IMG/Liver/7.jpg", "IMG/Liver/8.jpg"]
           },
-
+          {
+            nome: "21/22 Manchester City White Soccer",
+            img: "IMG/Man City/61.jpg",
+            fotos: ["IMG/Man City/62.jpg", "IMG/Man City/63.jpg", "IMG/Man City/64.jpg", "IMG/Man City/65.jpg", "IMG/Man City/66.jpg", "IMG/Man City/67.jpg"]
+          }
         ]
       },
       calcoes: [ ],
@@ -584,8 +614,8 @@
       nba: [ ],
       bolas: [ ]
     };
-
-    const MAX_PER_PAGE = 100;
+    // ... RESTANTE DO TEU SCRIPT SEM ALTERAÇÕES ...
+    const MAX_PER_PAGE = 20;
     let currentCat = "camisolas";
     let currentLiga = "portuguesa";
     let currentPage = 1;
@@ -669,6 +699,27 @@
         renderProducts("camisolas", 1, this.getAttribute('data-liga'));
       }
     });
+
+    // Função para o dropdown funcionar no mobile
+    function handleMobileDropdown() {
+      const camisolasLi = document.querySelector(".camisolas-dropdown");
+      const isMobile = window.innerWidth <= 900;
+      if (!isMobile) {
+        camisolasLi.classList.remove('show-mobile');
+      } else {
+        camisolasLi.onclick = function(e) {
+          if (e.target.classList.contains("camisolas-dropdown") || e.target.closest(".camisolas-dropdown")) {
+            if (!camisolasLi.classList.contains('show-mobile')) {
+              camisolasLi.classList.add('show-mobile');
+            } else {
+              camisolasLi.classList.remove('show-mobile');
+            }
+          }
+        }
+      }
+    }
+    window.addEventListener('resize', handleMobileDropdown);
+    handleMobileDropdown();
 
     // Modal
     let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
