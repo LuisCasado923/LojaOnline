@@ -721,23 +721,43 @@
       }
     });
 
-    // Dropdown das ligas (Liga Portuguesa já ativa)
-    document.querySelectorAll('.dropdown-ligas button').forEach(btn => {
-      btn.onclick = function(e) {
-        e.stopPropagation();
-        document.querySelectorAll('.dropdown-ligas button').forEach(x => x.classList.remove('selected-liga'));
-        this.classList.add('selected-liga');
-        // Seleciona visualmente a categoria camisolas
-        document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
-        document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
-        renderProducts("camisolas", 1, this.getAttribute('data-liga'));
+    // Fecha dropdown se clicares fora do menu no mobile
+    document.addEventListener('click', function(e) {
+      const camisolasLi = document.querySelector(".camisolas-dropdown");
+      const dropdown = document.querySelector(".dropdown-ligas");
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        if (
+          camisolasLi.classList.contains('show-mobile') &&
+          !camisolasLi.contains(e.target)
+        ) {
+          camisolasLi.classList.remove('show-mobile');
+        }
       }
     });
+
+    document.querySelectorAll('.dropdown-ligas button').forEach(btn => {
+    btn.onclick = function(e) {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown-ligas button').forEach(x => x.classList.remove('selected-liga'));
+      this.classList.add('selected-liga');
+      document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
+      document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
+      renderProducts("camisolas", 1, this.getAttribute('data-liga'));
+      
+      // FECHA O DROPDOWN NO MOBILE
+      if (window.innerWidth <= 900) {
+        document.querySelector(".camisolas-dropdown").classList.remove('show-mobile');
+      }
+    }
+  });
+
 
     // Função para o dropdown funcionar no mobile
     function handleMobileDropdown() {
       const camisolasLi = document.querySelector(".camisolas-dropdown");
       const isMobile = window.innerWidth <= 900;
+      camisolasLi.onclick = null; 
       if (!isMobile) {
         camisolasLi.classList.remove('show-mobile');
       } else {
