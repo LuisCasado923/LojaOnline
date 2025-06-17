@@ -223,7 +223,7 @@
       .dropdown-ligas {
         display: none;
         position: fixed !important;
-        top: 120px !important;
+        top: 0 !important;   /* Fica colado ao topo */
         left: 0 !important;
         width: 100vw !important;
         min-width: unset !important;
@@ -231,17 +231,37 @@
         border-radius: 0 0 14px 14px !important;
         border-left: none !important;
         border-top: none !important;
-        box-shadow: 0 12px 36px 0 rgba(33,55,99,0.15);
-        z-index: 2001 !important;
-        background: #fff;
-        padding: 10px 0 12px 0;
+        box-shadow: 0 12px 36px 0 rgba(33,55,99,0.17);
+        z-index: 9999 !important;   /* Garante que fica acima de tudo */
+        background: #232a36;        /* Podes mudar a cor se quiseres */
+        padding: 13px 0 13px 0;
       }
-      .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
-      .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas,
       .sidebar li.camisolas-dropdown.show-mobile .dropdown-ligas {
-        display: block !important;
-      }
-    }
+    display: block !important;
+    animation: dropMobile 0.22s cubic-bezier(.7,.1,.5,1.6);
+  }
+
+  /* Para DESKTOP mantém o hover! */
+  .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
+  .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas {
+    display: block;
+    position: absolute !important;
+    top: 38px !important;
+    left: 0 !important;
+    width: 210px !important;
+    min-width: 170px !important;
+    border-radius: 0 0 9px 9px;
+    box-shadow: 0 8px 20px rgba(33,55,99,0.08);
+    z-index: 100;
+    background: #fff;
+    padding: 7px 0 7px 0;
+  }
+
+  @keyframes dropMobile {
+    from { transform: translateY(-36px); opacity: 0;}
+    to { transform: translateY(0); opacity: 1;}
+  }
+}
     @media (max-width: 500px) {
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
