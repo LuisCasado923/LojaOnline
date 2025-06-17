@@ -226,17 +226,17 @@
         position: fixed !important;
         left: 0 !important;
         width: 100vw !important;
-        min-width: unset !important;
         max-width: 100vw !important;
         border-radius: 0 0 14px 14px !important;
         border-left: none !important;
         border-top: none !important;
         box-shadow: 0 12px 36px 0 rgba(33,55,99,0.15);
-        z-index: 2001 !important;
+        z-index: 2200 !important;
         background: #fff;
         padding: 10px 0 12px 0;
-        /* REMOVE/COMENTA ESTA LINHA ↓ */
-        /* top: 120px !important; */
+        top: 86px !important; /* altura do header */
+        overflow-y: auto;
+        max-height: 45vh/* altura do header + altura do nav */
       }
       .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
       .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas,
@@ -723,46 +723,53 @@
       }
     });
 
-    // Dropdown das ligas (Liga Portuguesa já ativa)
-    document.querySelectorAll('.dropdown-ligas button').forEach(btn => {
-      btn.onclick = function(e) {
-        e.stopPropagation();
-        document.querySelectorAll('.dropdown-ligas button').forEach(x => x.classList.remove('selected-liga'));
-        this.classList.add('selected-liga');
-        // Seleciona visualmente a categoria camisolas
-        document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
-        document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
-        renderProducts("camisolas", 1, this.getAttribute('data-liga'));
-        // Fecha o dropdown no mobile e desbloqueia o scroll
-        document.querySelector(".camisolas-dropdown").classList.remove('show-mobile');
-        enableBodyScroll();
-      }
-    });
+    // Botões das ligas
+document.querySelectorAll('.dropdown-ligas button').forEach(btn => {
+  btn.onclick = function(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.dropdown-ligas button').forEach(x => x.classList.remove('selected-liga'));
+    this.classList.add('selected-liga');
+    // Seleciona a categoria camisolas
+    document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
+    document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
+    renderProducts("camisolas", 1, this.getAttribute('data-liga'));
+    // Fecha dropdown no mobile e desbloqueia o scroll
+    const camisolasLi = document.querySelector(".camisolas-dropdown");
+    camisolasLi.classList.remove('show-mobile');
+    const dropdown = camisolasLi.querySelector('.dropdown-ligas');
+    dropdown.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+});
 
-    // Função para o dropdown funcionar no mobile
-    function handleMobileDropdown() {
-      const camisolasLi = document.querySelector(".camisolas-dropdown");
-      const isMobile = window.innerWidth <= 900;
-      if (!isMobile) {
-        camisolasLi.classList.remove('show-mobile');
-        enableBodyScroll();
-      } else {
-        camisolasLi.onclick = function(e) {
-          if (e.target.classList.contains("camisolas-dropdown") || e.target.closest(".camisolas-dropdown")) {
-            if (!camisolasLi.classList.contains('show-mobile')) {
-              camisolasLi.classList.add('show-mobile');
-              setTimeout(updateDropdownPosition, 60);
-              disableBodyScroll();
-            } else {
-              camisolasLi.classList.remove('show-mobile');
-              enableBodyScroll();
-            }
-          }
+    // Toggle mobile dropdown
+function handleMobileDropdown() {
+  const camisolasLi = document.querySelector(".camisolas-dropdown");
+  const dropdown = camisolasLi.querySelector(".dropdown-ligas");
+  if (window.innerWidth <= 900) {
+    camisolasLi.onclick = function(e) {
+      // Só ativa se clicar na própria li, não nos botões internos
+      if (e.target === camisolasLi || e.target.closest('.camisolas-dropdown')) {
+        if (!camisolasLi.classList.contains('show-mobile')) {
+          camisolasLi.classList.add('show-mobile');
+          dropdown.style.display = 'block';
+          document.body.style.overflow = 'hidden'; // BLOQUEIA SCROLL BODY
+        } else {
+          camisolasLi.classList.remove('show-mobile');
+          dropdown.style.display = 'none';
+          document.body.style.overflow = '';
         }
       }
     }
-    window.addEventListener('resize', handleMobileDropdown);
-    handleMobileDropdown();
+  } else {
+    camisolasLi.onclick = null;
+    camisolasLi.classList.remove('show-mobile');
+    document.body.style.overflow = '';
+    if(dropdown) dropdown.style.display = '';
+  }
+}
+window.addEventListener('resize', handleMobileDropdown);
+handleMobileDropdown();
 
     // ------ NOVO: Ajuste dinâmico do top do dropdown ------
     function updateDropdownPosition() {
@@ -792,17 +799,18 @@
     function enableBodyScroll() {
       document.body.style.overflow = '';
     }
-    // Fechar dropdown ao clicar fora dele (no mobile)
-    document.addEventListener('click', function(e){
-      const dropdown = document.querySelector('.dropdown-ligas');
-      const camisolasDropdown = document.querySelector('.camisolas-dropdown');
-      if (window.innerWidth <= 900 && camisolasDropdown.classList.contains('show-mobile')) {
-        if (!dropdown.contains(e.target) && !e.target.closest('.camisolas-dropdown')) {
-          camisolasDropdown.classList.remove('show-mobile');
-          enableBodyScroll();
-        }
-      }
-    });
+    // Fecha ao clicar fora no mobile
+document.addEventListener('click', function(e){
+  const camisolasDropdown = document.querySelector('.camisolas-dropdown');
+  const dropdown = camisolasDropdown.querySelector('.dropdown-ligas');
+  if (window.innerWidth <= 900 && camisolasDropdown.classList.contains('show-mobile')) {
+    if (!dropdown.contains(e.target) && !e.target.closest('.camisolas-dropdown')) {
+      camisolasDropdown.classList.remove('show-mobile');
+      dropdown.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+});
 
     // Modal
     let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
