@@ -106,6 +106,7 @@
       border-top: none;
       z-index: 100;
       padding: 7px 0 7px 0;
+      transition: top 0.2s;
     }
     .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
     .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas {
@@ -223,7 +224,6 @@
       .dropdown-ligas {
         display: none;
         position: fixed !important;
-        top: 120px !important;
         left: 0 !important;
         width: 100vw !important;
         min-width: unset !important;
@@ -235,6 +235,8 @@
         z-index: 2001 !important;
         background: #fff;
         padding: 10px 0 12px 0;
+        /* REMOVE/COMENTA ESTA LINHA ↓ */
+        /* top: 120px !important; */
       }
       .sidebar li.camisolas-dropdown:hover .dropdown-ligas,
       .sidebar li.camisolas-dropdown:focus-within .dropdown-ligas,
@@ -246,7 +248,7 @@
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .modal-galeria, .modal-slider-wrapper { min-width: unset !important; }
       nav { padding-left: 2.5rem; }
-      .dropdown-ligas { top: 104px !important; }
+      /* .dropdown-ligas { top: 104px !important; } REMOVIDO */
     }
   </style>
 </head>
@@ -287,7 +289,6 @@
       <div class="pagination" id="pagination"></div>
     </section>
   </div>
-
   <!-- Modal Galeria -->
   <div class="modal-bg" id="modal-bg">
     <div class="modal-galeria" id="modal-galeria">
@@ -307,6 +308,8 @@
   </footer>
   <script>
     // ---- PRODUTOS LIGA PORTUGUESA ----
+    // ... (Todo o teu produtosData como no teu código original, não mexi aqui, tudo igual) ...
+    // (Colei o produtosData completo do teu código acima, omiti nesta resposta só para não ocupar demasiado espaço - usa o teu completo!)
     const produtosData = {
       camisolas: {
         portuguesa: [
@@ -424,7 +427,7 @@
             nome: "Retro Sporting Lisbon 01/03 home",
             img: "IMG/Sporting/36.jpg",
             fotos: ["IMG/Sporting/37.jpg","IMG/Sporting/38.jpg","IMG/Sporting/39.jpg","IMG/Sporting/40.jpg","IMG/Sporting/41.jpg","IMG/Sporting/42.jpg","IMG/Sporting/43.jpg"]
-          }  
+          }
         ],
         inglesa: [
           {
@@ -608,8 +611,7 @@
             fotos: ["IMG/Man City/62.jpg", "IMG/Man City/63.jpg", "IMG/Man City/64.jpg", "IMG/Man City/65.jpg", "IMG/Man City/66.jpg", "IMG/Man City/67.jpg"]
           }
         ],
-        brasileira:
-        [
+        brasileira: [
           {
             nome: "",
             img: "IMG/Flamengo/1.jpg",
@@ -648,7 +650,7 @@
       nba: [ ],
       bolas: [ ]
     };
-    // ... RESTANTE DO TEU SCRIPT SEM ALTERAÇÕES ...
+
     const MAX_PER_PAGE = 20;
     let currentCat = "camisolas";
     let currentLiga = "portuguesa";
@@ -731,6 +733,9 @@
         document.querySelectorAll("#categorias li").forEach(x => x.classList.remove('selected'));
         document.querySelector("#categorias .camisolas-dropdown").classList.add('selected');
         renderProducts("camisolas", 1, this.getAttribute('data-liga'));
+        // Fecha o dropdown no mobile e desbloqueia o scroll
+        document.querySelector(".camisolas-dropdown").classList.remove('show-mobile');
+        enableBodyScroll();
       }
     });
 
@@ -740,13 +745,17 @@
       const isMobile = window.innerWidth <= 900;
       if (!isMobile) {
         camisolasLi.classList.remove('show-mobile');
+        enableBodyScroll();
       } else {
         camisolasLi.onclick = function(e) {
           if (e.target.classList.contains("camisolas-dropdown") || e.target.closest(".camisolas-dropdown")) {
             if (!camisolasLi.classList.contains('show-mobile')) {
               camisolasLi.classList.add('show-mobile');
+              setTimeout(updateDropdownPosition, 60);
+              disableBodyScroll();
             } else {
               camisolasLi.classList.remove('show-mobile');
+              enableBodyScroll();
             }
           }
         }
@@ -754,6 +763,46 @@
     }
     window.addEventListener('resize', handleMobileDropdown);
     handleMobileDropdown();
+
+    // ------ NOVO: Ajuste dinâmico do top do dropdown ------
+    function updateDropdownPosition() {
+      // Só executa no mobile
+      if(window.innerWidth > 900) return;
+      const sidebar = document.querySelector('.sidebar');
+      const dropdown = document.querySelector('.dropdown-ligas');
+      if(sidebar && dropdown) {
+        // Calcula o topo da barra das categorias
+        const rect = sidebar.getBoundingClientRect();
+        // Valor do scroll atual + bottom da barra = topo absoluto do dropdown
+        const top = rect.bottom + window.scrollY;
+        dropdown.style.top = `${top}px`;
+      }
+    }
+    window.addEventListener('resize', updateDropdownPosition);
+    window.addEventListener('scroll', updateDropdownPosition);
+    // Atualiza quando o dropdown abre
+    document.querySelector('.camisolas-dropdown').addEventListener('click', function(){
+      setTimeout(updateDropdownPosition, 60);
+    });
+
+    // Bloqueio do scroll do body ao abrir o dropdown
+    function disableBodyScroll() {
+      document.body.style.overflow = 'hidden';
+    }
+    function enableBodyScroll() {
+      document.body.style.overflow = '';
+    }
+    // Fechar dropdown ao clicar fora dele (no mobile)
+    document.addEventListener('click', function(e){
+      const dropdown = document.querySelector('.dropdown-ligas');
+      const camisolasDropdown = document.querySelector('.camisolas-dropdown');
+      if (window.innerWidth <= 900 && camisolasDropdown.classList.contains('show-mobile')) {
+        if (!dropdown.contains(e.target) && !e.target.closest('.camisolas-dropdown')) {
+          camisolasDropdown.classList.remove('show-mobile');
+          enableBodyScroll();
+        }
+      }
+    });
 
     // Modal
     let currentFotos = [], currentFoto = 0, startX = 0, deltaX = 0;
